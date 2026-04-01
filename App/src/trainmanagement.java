@@ -2,7 +2,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.LinkedHashSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 class TrainConsist {
@@ -10,12 +12,14 @@ class TrainConsist {
     private Set<String> bogieIds;
     private LinkedList<String> orderedConsist;
     private Set<String> orderedFormation;
+    private Map<String, Integer> bogieCapacities;
 
     public TrainConsist() {
         this.passengerBogies = new ArrayList<>();
         this.bogieIds = new HashSet<>();
         this.orderedConsist = new LinkedList<>();
         this.orderedFormation = new LinkedHashSet<>();
+        this.bogieCapacities = new HashMap<>();
     }
 
     public void addBogie(String type) {
@@ -67,6 +71,14 @@ class TrainConsist {
 
     public Set<String> getOrderedFormation() {
         return orderedFormation;
+    }
+
+    public void mapCapacity(String bogie, int capacity) {
+        bogieCapacities.put(bogie, capacity);
+    }
+
+    public Map<String, Integer> getBogieCapacities() {
+        return bogieCapacities;
     }
 
     public int getBogieCount() {
@@ -140,20 +152,34 @@ class TrainService {
         System.out.println("\n****************************************");
         System.out.println("* UC5 - Preserve Insertion Order of Bogies *");
         System.out.println("****************************************\n");
-
         consist.addToFormation("Engine");
         consist.addToFormation("Sleeper");
         consist.addToFormation("Cargo");
         consist.addToFormation("Guard");
-
         consist.addToFormation("Sleeper");
-
         System.out.println("Final Train Formation:");
         System.out.println(consist.getOrderedFormation());
-
         System.out.println("\nNote:");
         System.out.println("LinkedHashSet preserves insertion order and removes duplicates automatically.");
         System.out.println("UC5 formation setup completed...");
+    }
+
+    public void mapBogieCapacity(TrainConsist consist) {
+        System.out.println("\n****************************************");
+        System.out.println("* UC6 - Map Bogie to Capacity (HashMap) *");
+        System.out.println("****************************************\n");
+
+        consist.mapCapacity("Sleeper", 72);
+        consist.mapCapacity("AC Chair", 56);
+        consist.mapCapacity("First Class", 24);
+        consist.mapCapacity("Cargo", 120);
+
+        System.out.println("Bogie Capacity Details:");
+        for (Map.Entry<String, Integer> entry : consist.getBogieCapacities().entrySet()) {
+            System.out.println(entry.getKey() + " -> " + entry.getValue());
+        }
+
+        System.out.println("\nUC6 bogie-capacity mapping completed...");
     }
 }
 
@@ -169,6 +195,7 @@ public class trainmanagement {
         service.trackUniqueBogieIds(consist);
         service.maintainOrderedConsist(consist);
         service.preserveInsertionOrder(consist);
+        service.mapBogieCapacity(consist);
 
         System.out.println("\nSystem ready for operations...");
     }
