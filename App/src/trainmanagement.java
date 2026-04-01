@@ -6,6 +6,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Comparator;
+
+class Bogie {
+    private String name;
+    private int capacity;
+
+    public Bogie(String name, int capacity) {
+        this.name = name;
+        this.capacity = capacity;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    @Override
+    public String toString() {
+        return name + " -> " + capacity;
+    }
+}
 
 class TrainConsist {
     private List<String> passengerBogies;
@@ -13,6 +37,7 @@ class TrainConsist {
     private LinkedList<String> orderedConsist;
     private Set<String> orderedFormation;
     private Map<String, Integer> bogieCapacities;
+    private List<Bogie> bogieObjects;
 
     public TrainConsist() {
         this.passengerBogies = new ArrayList<>();
@@ -20,6 +45,7 @@ class TrainConsist {
         this.orderedConsist = new LinkedList<>();
         this.orderedFormation = new LinkedHashSet<>();
         this.bogieCapacities = new HashMap<>();
+        this.bogieObjects = new ArrayList<>();
     }
 
     public void addBogie(String type) {
@@ -79,6 +105,14 @@ class TrainConsist {
 
     public Map<String, Integer> getBogieCapacities() {
         return bogieCapacities;
+    }
+
+    public void addBogieObject(Bogie bogie) {
+        bogieObjects.add(bogie);
+    }
+
+    public List<Bogie> getBogieObjects() {
+        return bogieObjects;
     }
 
     public int getBogieCount() {
@@ -168,18 +202,40 @@ class TrainService {
         System.out.println("\n****************************************");
         System.out.println("* UC6 - Map Bogie to Capacity (HashMap) *");
         System.out.println("****************************************\n");
-
         consist.mapCapacity("Sleeper", 72);
         consist.mapCapacity("AC Chair", 56);
         consist.mapCapacity("First Class", 24);
         consist.mapCapacity("Cargo", 120);
-
         System.out.println("Bogie Capacity Details:");
         for (Map.Entry<String, Integer> entry : consist.getBogieCapacities().entrySet()) {
             System.out.println(entry.getKey() + " -> " + entry.getValue());
         }
-
         System.out.println("\nUC6 bogie-capacity mapping completed...");
+    }
+
+    public void sortBogiesByCapacity(TrainConsist consist) {
+        System.out.println("\n****************************************");
+        System.out.println("* UC7 - Sort Bogies by Capacity (Comparator) *");
+        System.out.println("****************************************\n");
+
+        consist.addBogieObject(new Bogie("Sleeper", 72));
+        consist.addBogieObject(new Bogie("AC Chair", 56));
+        consist.addBogieObject(new Bogie("First Class", 24));
+        consist.addBogieObject(new Bogie("General", 90));
+
+        System.out.println("Before Sorting:");
+        for (Bogie b : consist.getBogieObjects()) {
+            System.out.println(b);
+        }
+
+        consist.getBogieObjects().sort(Comparator.comparingInt(Bogie::getCapacity));
+
+        System.out.println("\nAfter Sorting by Capacity:");
+        for (Bogie b : consist.getBogieObjects()) {
+            System.out.println(b);
+        }
+
+        System.out.println("\nUC7 sorting completed...");
     }
 }
 
@@ -196,6 +252,7 @@ public class trainmanagement {
         service.maintainOrderedConsist(consist);
         service.preserveInsertionOrder(consist);
         service.mapBogieCapacity(consist);
+        service.sortBogiesByCapacity(consist);
 
         System.out.println("\nSystem ready for operations...");
     }
