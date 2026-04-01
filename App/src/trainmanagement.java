@@ -1,11 +1,15 @@
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 class TrainConsist {
     private List<String> passengerBogies;
+    private Set<String> bogieIds;
 
     public TrainConsist() {
         this.passengerBogies = new ArrayList<>();
+        this.bogieIds = new HashSet<>();
     }
 
     public void addBogie(String type) {
@@ -24,6 +28,14 @@ class TrainConsist {
         return passengerBogies;
     }
 
+    public void addBogieId(String id) {
+        bogieIds.add(id);
+    }
+
+    public Set<String> getBogieIds() {
+        return bogieIds;
+    }
+
     public int getBogieCount() {
         return passengerBogies.size();
     }
@@ -36,7 +48,7 @@ class TrainService {
         System.out.println("Current Train Consist : " + consist.getPassengerBogies());
     }
 
-    public void runUC2(TrainConsist consist) {
+    public void processPassengerOperations(TrainConsist consist) {
         System.out.println("\n****************************************");
         System.out.println("* UC2 - Add Passenger Bogies to Train *");
         System.out.println("****************************************\n");
@@ -61,6 +73,27 @@ class TrainService {
 
         System.out.println("\nUC2 operations completed successfully...");
     }
+
+    public void trackUniqueBogieIds(TrainConsist consist) {
+        System.out.println("\n****************************************");
+        System.out.println("* UC3 - Track Unique Bogie IDs *");
+        System.out.println("****************************************\n");
+
+        consist.addBogieId("BG101");
+        consist.addBogieId("BG102");
+        consist.addBogieId("BG103");
+        consist.addBogieId("BG104");
+
+        consist.addBogieId("BG101");
+        consist.addBogieId("BG102");
+
+        System.out.println("Bogie IDs After Insertion:");
+        System.out.println(consist.getBogieIds());
+
+        System.out.println("\nNote:");
+        System.out.println("Duplicates are automatically ignored by HashSet.");
+        System.out.println("UC3 uniqueness validation completed...");
+    }
 }
 
 public class trainmanagement {
@@ -71,8 +104,11 @@ public class trainmanagement {
         TrainService service = new TrainService();
 
         service.displaySummary(consist);
-        service.runUC2(consist);
 
-        System.out.println("System ready for operations...");
+        service.processPassengerOperations(consist);
+
+        service.trackUniqueBogieIds(consist);
+
+        System.out.println("\nSystem ready for operations...");
     }
 }
