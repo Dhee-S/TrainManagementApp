@@ -1,92 +1,57 @@
 import org.junit.jupiter.api.Test;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.regex.Pattern;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TrainManagementAppTest {
 
+    private final String TRAIN_ID_PATTERN = "TRN-\\d{4}";
+    private final String CARGO_CODE_PATTERN = "PET-[A-Z]{2}";
+
     @Test
-    void testReduce_TotalSeatCalculation() {
-        List<Bogie> bogies = new ArrayList<>();
-        bogies.add(new Bogie("Sleeper", 72));
-        bogies.add(new Bogie("AC", 50));
-
-        int total = bogies.stream()
-                .map(Bogie::getCapacity)
-                .reduce(0, Integer::sum);
-
-        assertEquals(122, total);
+    void testRegex_ValidTrainID() {
+        assertTrue(Pattern.matches(TRAIN_ID_PATTERN, "TRN-1234"));
     }
 
     @Test
-    void testReduce_MultipleBogiesAggregation() {
-        List<Bogie> bogies = new ArrayList<>();
-        bogies.add(new Bogie("A", 10));
-        bogies.add(new Bogie("B", 20));
-        bogies.add(new Bogie("C", 30));
-
-        int total = bogies.stream()
-                .map(Bogie::getCapacity)
-                .reduce(0, Integer::sum);
-
-        assertEquals(60, total);
+    void testRegex_InvalidTrainIDFormat() {
+        assertFalse(Pattern.matches(TRAIN_ID_PATTERN, "TRAIN12"));
+        assertFalse(Pattern.matches(TRAIN_ID_PATTERN, "TRN12A"));
+        assertFalse(Pattern.matches(TRAIN_ID_PATTERN, "1234-TRN"));
     }
 
     @Test
-    void testReduce_SingleBogieCapacity() {
-        List<Bogie> bogies = new ArrayList<>();
-        bogies.add(new Bogie("Single", 72));
-
-        int total = bogies.stream()
-                .map(Bogie::getCapacity)
-                .reduce(0, Integer::sum);
-
-        assertEquals(72, total);
+    void testRegex_ValidCargoCode() {
+        assertTrue(Pattern.matches(CARGO_CODE_PATTERN, "PET-AB"));
     }
 
     @Test
-    void testReduce_EmptyBogieList() {
-        List<Bogie> bogies = new ArrayList<>();
-
-        int total = bogies.stream()
-                .map(Bogie::getCapacity)
-                .reduce(0, Integer::sum);
-
-        assertEquals(0, total);
+    void testRegex_InvalidCargoCodeFormat() {
+        assertFalse(Pattern.matches(CARGO_CODE_PATTERN, "PET-ab"));
+        assertFalse(Pattern.matches(CARGO_CODE_PATTERN, "PET123"));
+        assertFalse(Pattern.matches(CARGO_CODE_PATTERN, "AB-PET"));
     }
 
     @Test
-    void testReduce_CorrectCapacityExtraction() {
-        Bogie b = new Bogie("Test", 50);
-        List<Bogie> bogies = List.of(b);
-
-        int total = bogies.stream()
-                .map(Bogie::getCapacity)
-                .reduce(0, Integer::sum);
-
-        assertEquals(b.getCapacity(), total);
+    void testRegex_TrainIDDigitLengthValidation() {
+        assertFalse(Pattern.matches(TRAIN_ID_PATTERN, "TRN-123"));
+        assertFalse(Pattern.matches(TRAIN_ID_PATTERN, "TRN-12345"));
     }
 
     @Test
-    void testReduce_AllBogiesIncluded() {
-        List<Bogie> bogies = new ArrayList<>();
-        for(int i = 0; i < 5; i++) bogies.add(new Bogie("B", 10));
-
-        int total = bogies.stream()
-                .map(Bogie::getCapacity)
-                .reduce(0, Integer::sum);
-
-        assertEquals(50, total);
+    void testRegex_CargoCodeUppercaseValidation() {
+        assertFalse(Pattern.matches(CARGO_CODE_PATTERN, "PET-aB"));
+        assertTrue(Pattern.matches(CARGO_CODE_PATTERN, "PET-XY"));
     }
 
     @Test
-    void testReduce_OriginalListUnchanged() {
-        List<Bogie> bogies = new ArrayList<>();
-        bogies.add(new Bogie("Sleeper", 72));
+    void testRegex_EmptyInputHandling() {
+        assertFalse(Pattern.matches(TRAIN_ID_PATTERN, ""));
+        assertFalse(Pattern.matches(CARGO_CODE_PATTERN, ""));
+    }
 
-        bogies.stream().map(Bogie::getCapacity).reduce(0, Integer::sum);
-
-        assertEquals(1, bogies.size());
-        assertEquals("Sleeper", bogies.get(0).getName());
+    @Test
+    void testRegex_ExactPatternMatch() {
+        assertFalse(Pattern.matches(TRAIN_ID_PATTERN, "TRN-1234Extra"));
+        assertFalse(Pattern.matches(CARGO_CODE_PATTERN, "PrefixPET-AB"));
     }
 }
