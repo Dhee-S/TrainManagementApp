@@ -1,61 +1,65 @@
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
-class Bogie {
-    private String name;
-    private int capacity;
+class GoodsBogie {
+    private String type;
+    private String cargo;
 
-    public Bogie(String name, int capacity) {
-        this.name = name;
-        this.capacity = capacity;
+    public GoodsBogie(String type, String cargo) {
+        this.type = type;
+        this.cargo = cargo;
     }
 
-    public String getName() { return name; }
-    public int getCapacity() { return capacity; }
+    public String getType() { return type; }
+    public String getCargo() { return cargo; }
 
     @Override
-    public String toString() { return name + " -> " + capacity; }
+    public String toString() {
+        return type + " -> " + cargo;
+    }
 }
 
 class TrainConsist {
-    private List<Bogie> bogieObjects = new ArrayList<>();
+    private List<GoodsBogie> goodsBogies = new ArrayList<>();
 
-    public void addBogieObject(Bogie bogie) { bogieObjects.add(bogie); }
-    public List<Bogie> getBogieObjects() { return bogieObjects; }
+    public void addGoodsBogie(GoodsBogie bogie) { goodsBogies.add(bogie); }
+    public List<GoodsBogie> getGoodsBogies() { return goodsBogies; }
 }
 
 class TrainService {
-    public void validateTrainData() {
+    public void checkSafetyCompliance(TrainConsist consist) {
         System.out.println("\n****************************************");
-        System.out.println("* UC11 - Validate Train ID and Cargo Code *");
+        System.out.println("* UC12 - Safety Compliance Check for Goods Bogies *");
         System.out.println("****************************************\n");
 
-        Scanner sc = new Scanner(System.in);
+        // Prepare test data as per the UC requirements
+        consist.getGoodsBogies().clear();
+        consist.addGoodsBogie(new GoodsBogie("Cylindrical", "Petroleum"));
+        consist.addGoodsBogie(new GoodsBogie("Open", "Coal"));
+        consist.addGoodsBogie(new GoodsBogie("Box", "Grain"));
+        consist.addGoodsBogie(new GoodsBogie("Cylindrical", "Coal"));
 
-        System.out.print("Enter Train ID (Format: TRN-1234): ");
-        String trainIdInput = sc.nextLine();
+        System.out.println("Goods Bogies in Train:");
+        consist.getGoodsBogies().forEach(System.out::println);
 
-        System.out.print("Enter Cargo Code (Format: PET-AB): ");
-        String cargoCodeInput = sc.nextLine();
+        // Safety Rule: If type is Cylindrical, cargo must be Petroleum
+        boolean isSafe = consist.getGoodsBogies().stream()
+                .allMatch(b -> {
+                    if (b.getType().equalsIgnoreCase("Cylindrical")) {
+                        return b.getCargo().equalsIgnoreCase("Petroleum");
+                    }
+                    return true;
+                });
 
-        String trainIdRegex = "TRN-\\d{4}";
-        String cargoCodeRegex = "PET-[A-Z]{2}";
+        System.out.println("\nSafety Compliance Status: " + isSafe);
 
-        Pattern trainIdPattern = Pattern.compile(trainIdRegex);
-        Matcher trainIdMatcher = trainIdPattern.matcher(trainIdInput);
+        if (isSafe) {
+            System.out.println("Train formation is SAFE.");
+        } else {
+            System.out.println("Train formation is NOT SAFE.");
+        }
 
-        Pattern cargoCodePattern = Pattern.compile(cargoCodeRegex);
-        Matcher cargoCodeMatcher = cargoCodePattern.matcher(cargoCodeInput);
-
-        boolean isTrainIdValid = trainIdMatcher.matches();
-        boolean isCargoCodeValid = cargoCodeMatcher.matches();
-
-        System.out.println("\nValidation Results:");
-        System.out.println("Train ID Valid: " + isTrainIdValid);
-        System.out.println("Cargo Code Valid: " + isCargoCodeValid);
-
-        System.out.println("\nUC11 validation completed...");
+        System.out.println("\nUC12 safety validation completed...");
     }
 }
 
@@ -65,7 +69,7 @@ public class trainmanagement {
         TrainConsist consist = new TrainConsist();
         TrainService service = new TrainService();
 
-        service.validateTrainData();
+        service.checkSafetyCompliance(consist);
 
         System.out.println("\nSystem ready for operations...");
     }
