@@ -23,7 +23,7 @@ class Bogie {
 
     @Override
     public String toString() {
-        return "Capacity -> " + capacity;
+        return name + " -> " + capacity;
     }
 }
 
@@ -66,9 +66,9 @@ class TrainService {
         System.out.println("Current Train Consist : " + consist.getPassengerBogies());
     }
 
-    public void groupBogiesByType(TrainConsist consist) {
+    public void countTotalSeats(TrainConsist consist) {
         System.out.println("\n****************************************");
-        System.out.println("* UC9 - Group Bogies by Type *");
+        System.out.println("* UC10 - Count Total Seats in Train *");
         System.out.println("****************************************\n");
 
         consist.getBogieObjects().clear();
@@ -76,21 +76,17 @@ class TrainService {
         consist.addBogieObject(new Bogie("AC Chair", 56));
         consist.addBogieObject(new Bogie("First Class", 24));
         consist.addBogieObject(new Bogie("Sleeper", 70));
-        consist.addBogieObject(new Bogie("AC Chair", 60));
 
-        System.out.println("All Bogies:");
-        consist.getBogieObjects().forEach(b -> System.out.println(b.getName() + " -> " + b.getCapacity()));
+        System.out.println("Bogies in Train:");
+        consist.getBogieObjects().forEach(System.out::println);
 
-        Map<String, List<Bogie>> groupedBogies = consist.getBogieObjects().stream()
-                .collect(Collectors.groupingBy(Bogie::getName));
+        // Functional Aggregation using map and reduce
+        int totalSeats = consist.getBogieObjects().stream()
+                .map(Bogie::getCapacity)
+                .reduce(0, Integer::sum);
 
-        System.out.println("\nGrouped Bogies:");
-        groupedBogies.forEach((type, list) -> {
-            System.out.println("Bogie Type: " + type);
-            list.forEach(System.out::println);
-        });
-
-        System.out.println("\nUC9 grouping completed...");
+        System.out.println("\nTotal Seating Capacity of Train: " + totalSeats);
+        System.out.println("UC10 aggregation completed...");
     }
 }
 
@@ -100,7 +96,7 @@ public class trainmanagement {
         TrainConsist consist = new TrainConsist();
         TrainService service = new TrainService();
         service.displaySummary(consist);
-        service.groupBogiesByType(consist);
+        service.countTotalSeats(consist);
         System.out.println("\nSystem ready for operations...");
     }
 }
