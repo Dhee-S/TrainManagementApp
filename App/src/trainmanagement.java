@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Comparator;
+import java.util.stream.Collectors;
 
 class Bogie {
     private String name;
@@ -48,76 +49,28 @@ class TrainConsist {
         this.bogieObjects = new ArrayList<>();
     }
 
-    public void addBogie(String type) {
-        passengerBogies.add(type);
-    }
-
-    public void removeBogie(String type) {
-        passengerBogies.remove(type);
-    }
-
-    public boolean hasBogie(String type) {
-        return passengerBogies.contains(type);
-    }
-
-    public List<String> getPassengerBogies() {
-        return passengerBogies;
-    }
-
-    public void addBogieId(String id) {
-        bogieIds.add(id);
-    }
-
-    public Set<String> getBogieIds() {
-        return bogieIds;
-    }
-
-    public void addToOrderedConsist(String bogie) {
-        orderedConsist.add(bogie);
-    }
-
-    public void addAtPosition(int index, String bogie) {
-        orderedConsist.add(index, bogie);
-    }
-
+    public void addBogie(String type) { passengerBogies.add(type); }
+    public void removeBogie(String type) { passengerBogies.remove(type); }
+    public boolean hasBogie(String type) { return passengerBogies.contains(type); }
+    public List<String> getPassengerBogies() { return passengerBogies; }
+    public void addBogieId(String id) { bogieIds.add(id); }
+    public Set<String> getBogieIds() { return bogieIds; }
+    public void addToOrderedConsist(String bogie) { orderedConsist.add(bogie); }
+    public void addAtPosition(int index, String bogie) { orderedConsist.add(index, bogie); }
     public void removeFirstAndLast() {
         if (!orderedConsist.isEmpty()) {
             orderedConsist.removeFirst();
             orderedConsist.removeLast();
         }
     }
-
-    public LinkedList<String> getOrderedConsist() {
-        return orderedConsist;
-    }
-
-    public void addToFormation(String bogie) {
-        orderedFormation.add(bogie);
-    }
-
-    public Set<String> getOrderedFormation() {
-        return orderedFormation;
-    }
-
-    public void mapCapacity(String bogie, int capacity) {
-        bogieCapacities.put(bogie, capacity);
-    }
-
-    public Map<String, Integer> getBogieCapacities() {
-        return bogieCapacities;
-    }
-
-    public void addBogieObject(Bogie bogie) {
-        bogieObjects.add(bogie);
-    }
-
-    public List<Bogie> getBogieObjects() {
-        return bogieObjects;
-    }
-
-    public int getBogieCount() {
-        return passengerBogies.size();
-    }
+    public LinkedList<String> getOrderedConsist() { return orderedConsist; }
+    public void addToFormation(String bogie) { orderedFormation.add(bogie); }
+    public Set<String> getOrderedFormation() { return orderedFormation; }
+    public void mapCapacity(String bogie, int capacity) { bogieCapacities.put(bogie, capacity); }
+    public Map<String, Integer> getBogieCapacities() { return bogieCapacities; }
+    public void addBogieObject(Bogie bogie) { bogieObjects.add(bogie); }
+    public List<Bogie> getBogieObjects() { return bogieObjects; }
+    public int getBogieCount() { return passengerBogies.size(); }
 }
 
 class TrainService {
@@ -134,16 +87,11 @@ class TrainService {
         consist.addBogie("Sleeper");
         consist.addBogie("AC Chair");
         consist.addBogie("First Class");
-        System.out.println("After Adding Bogies:");
-        System.out.println("Passenger Bogies: " + consist.getPassengerBogies());
+        System.out.println("After Adding Bogies: " + consist.getPassengerBogies());
         consist.removeBogie("AC Chair");
-        System.out.println("\nAfter Removing 'AC Chair':");
-        System.out.println("Passenger Bogies : " + consist.getPassengerBogies());
-        System.out.println("\nChecking if 'Sleeper' exists:");
+        System.out.println("After Removing 'AC Chair': " + consist.getPassengerBogies());
         System.out.println("Contains Sleeper? : " + consist.hasBogie("Sleeper"));
-        System.out.println("\nFinal Train Passenger Consist:");
-        System.out.println(consist.getPassengerBogies());
-        System.out.println("\nUC2 operations completed successfully...");
+        System.out.println("Final Train Passenger Consist: " + consist.getPassengerBogies());
     }
 
     public void trackUniqueBogieIds(TrainConsist consist) {
@@ -155,11 +103,8 @@ class TrainService {
         consist.addBogieId("BG103");
         consist.addBogieId("BG104");
         consist.addBogieId("BG101");
-        System.out.println("Bogie IDs After Insertion:");
-        System.out.println(consist.getBogieIds());
-        System.out.println("\nNote:");
-        System.out.println("Duplicates are automatically ignored by HashSet.");
-        System.out.println("UC3 uniqueness validation completed...");
+        System.out.println("Bogie IDs After Insertion: " + consist.getBogieIds());
+        System.out.println("Note: Duplicates are automatically ignored by HashSet.");
     }
 
     public void maintainOrderedConsist(TrainConsist consist) {
@@ -171,15 +116,11 @@ class TrainService {
         consist.addToOrderedConsist("AC");
         consist.addToOrderedConsist("Cargo");
         consist.addToOrderedConsist("Guard");
-        System.out.println("Initial Train Consist:");
-        System.out.println(consist.getOrderedConsist());
+        System.out.println("Initial Train Consist: " + consist.getOrderedConsist());
         consist.addAtPosition(2, "Pantry Car");
-        System.out.println("\nAfter Inserting 'Pantry Car' at position 2:");
-        System.out.println(consist.getOrderedConsist());
+        System.out.println("After Inserting 'Pantry Car' at position 2: " + consist.getOrderedConsist());
         consist.removeFirstAndLast();
-        System.out.println("\nAfter Removing First and Last Bogie:");
-        System.out.println(consist.getOrderedConsist());
-        System.out.println("\nUC4 ordered consist operations completed...");
+        System.out.println("After Removing First and Last Bogie: " + consist.getOrderedConsist());
     }
 
     public void preserveInsertionOrder(TrainConsist consist) {
@@ -191,11 +132,8 @@ class TrainService {
         consist.addToFormation("Cargo");
         consist.addToFormation("Guard");
         consist.addToFormation("Sleeper");
-        System.out.println("Final Train Formation:");
-        System.out.println(consist.getOrderedFormation());
-        System.out.println("\nNote:");
-        System.out.println("LinkedHashSet preserves insertion order and removes duplicates automatically.");
-        System.out.println("UC5 formation setup completed...");
+        System.out.println("Final Train Formation: " + consist.getOrderedFormation());
+        System.out.println("Note: LinkedHashSet preserves insertion order and removes duplicates.");
     }
 
     public void mapBogieCapacity(TrainConsist consist) {
@@ -207,45 +145,45 @@ class TrainService {
         consist.mapCapacity("First Class", 24);
         consist.mapCapacity("Cargo", 120);
         System.out.println("Bogie Capacity Details:");
-        for (Map.Entry<String, Integer> entry : consist.getBogieCapacities().entrySet()) {
-            System.out.println(entry.getKey() + " -> " + entry.getValue());
-        }
-        System.out.println("\nUC6 bogie-capacity mapping completed...");
+        consist.getBogieCapacities().forEach((k, v) -> System.out.println(k + " -> " + v));
     }
 
     public void sortBogiesByCapacity(TrainConsist consist) {
         System.out.println("\n****************************************");
         System.out.println("* UC7 - Sort Bogies by Capacity (Comparator) *");
         System.out.println("****************************************\n");
-
+        consist.getBogieObjects().clear();
         consist.addBogieObject(new Bogie("Sleeper", 72));
         consist.addBogieObject(new Bogie("AC Chair", 56));
         consist.addBogieObject(new Bogie("First Class", 24));
         consist.addBogieObject(new Bogie("General", 90));
-
         System.out.println("Before Sorting:");
-        for (Bogie b : consist.getBogieObjects()) {
-            System.out.println(b);
-        }
-
+        consist.getBogieObjects().forEach(System.out::println);
         consist.getBogieObjects().sort(Comparator.comparingInt(Bogie::getCapacity));
-
         System.out.println("\nAfter Sorting by Capacity:");
-        for (Bogie b : consist.getBogieObjects()) {
-            System.out.println(b);
-        }
+        consist.getBogieObjects().forEach(System.out::println);
+    }
 
-        System.out.println("\nUC7 sorting completed...");
+    public void filterBogiesUsingStreams(TrainConsist consist) {
+        System.out.println("\n****************************************");
+        System.out.println("* UC8 - Filter Passenger Bogies Using Streams *");
+        System.out.println("****************************************\n");
+        System.out.println("All Bogies:");
+        consist.getBogieObjects().forEach(System.out::println);
+        List<Bogie> filtered = consist.getBogieObjects().stream()
+                .filter(b -> b.getCapacity() > 60)
+                .collect(Collectors.toList());
+        System.out.println("\nFiltered Bogies (Capacity > 60):");
+        filtered.forEach(System.out::println);
+        System.out.println("\nUC8 filtering completed...");
     }
 }
 
 public class trainmanagement {
     public static void main(String[] args) {
         System.out.println("=== Train Consist Management App ===");
-
         TrainConsist consist = new TrainConsist();
         TrainService service = new TrainService();
-
         service.displaySummary(consist);
         service.processPassengerOperations(consist);
         service.trackUniqueBogieIds(consist);
@@ -253,7 +191,7 @@ public class trainmanagement {
         service.preserveInsertionOrder(consist);
         service.mapBogieCapacity(consist);
         service.sortBogiesByCapacity(consist);
-
+        service.filterBogiesUsingStreams(consist);
         System.out.println("\nSystem ready for operations...");
     }
 }
